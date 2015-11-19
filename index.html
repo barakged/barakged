@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+   <head>
+    <title>api</title>
+<script>
+function AjaxCall()
+{ 
+   var getJSON = function(url) {
+   return new Promise(function(resolve, reject) {
+     var xhr = new XMLHttpRequest();
+     xhr.open('get', url, true);
+     xhr.responseType = 'json';
+     xhr.onload = function() {
+     var status = xhr.status;
+     if (status == 200) {
+        resolve(xhr.response);
+      } else {
+        reject(status);
+      }
+    };
+    xhr.send();
+  });
+};
+
+var x = document.getElementById("myText").value;
+getJSON('https://en.wikipedia.org/api/rest_v1/page/title/'+x).then(function(data) {
+        for(var i=0;i<data.items.length;i++){
+         var strings =data.items[i].title;
+    var ul = document.getElementById("result");
+      var li = document.createElement("li");
+      li.appendChild(document.createTextNode(strings));
+      ul.appendChild(li);
+      
+
+    }
+}, function(status) { //error detection....
+  alert('Something went wrong.');
+});
+
+}
+    </script>
+    
+<script type="text/javascript">
+    var req = createXMLHttpRequest();
+
+  function createXMLHttpRequest() {
+    var ua;
+      if(window.XMLHttpRequest) {
+      try {
+      ua = new XMLHttpRequest();
+      } catch(e) {
+        ua = false;
+     }
+        } else if(window.ActiveXObject) {
+  try {
+    ua = new ActiveXObject("Microsoft.XMLHTTP");
+  } catch(e) {
+    ua = false;
+  }
+ }
+return ua;
+}
+
+function sendRequest()  
+{    
+   
+    var params = document.getElementById("myText").value;
+    var url='https://en.wikipedia.org/api/rest_v1/page/title/';
+    req.open('GET', url+params,true); // שליחת המידע לשרת
+    req.responseType = 'json';
+    req.onreadystatechange = handleResponse;  // זו התגובה מהשרת שעוברת לפונקציה שלוש. ברגע שיש מצב 4 אז פונקציה 3 עובדת
+    req.send(null);
+}
+
+function handleResponse() {
+ if(req.readyState == 4) 
+ {
+ var response = req.response;
+
+  for(var i=0;i<response.items.length;i++){
+         var strings =response.items[i].title;
+    var ul = document.getElementById("result");
+      var li = document.createElement("li");
+      li.appendChild(document.createTextNode(strings));
+      ul.appendChild(li);
+    }
+
+
+ }
+}
+</script>
+
+
+
+<script type="text/javascript">
+    var req2 = createXMLHttpRequest2();
+    
+  function createXMLHttpRequest2() {
+    var ua;
+      if(window.XMLHttpRequest) {
+      try {
+      ua = new XMLHttpRequest();
+      } catch(e) {
+        ua = false;
+     }
+        } else if(window.ActiveXObject) {
+  try {
+    ua = new ActiveXObject("Microsoft.XMLHTTP");
+  } catch(e) {
+    ua = false;
+  }
+ }
+return ua;
+}
+
+
+function sendRequest2()  
+{    
+    var url='http://jsonplaceholder.typicode.com/posts';
+    var params = "id=1&title=foo&body=bar&userId=1"; 
+    //lorem=ipsum&name=binny";
+   // var params = "title="+document.getElementById("myText2").value;
+    req2.open('POST', url,true); 
+    req2.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    req2.responseType = 'json';
+    req2.onreadystatechange = handleResponse2;  
+    req2.send(params);
+}
+
+function handleResponse2() {
+ if(req2.readyState == 4) 
+ {
+ var response = req2.response;
+
+  for(var i=0;i<1;i++){
+         var strings =response.title;
+    var ul = document.getElementById("result");
+      var li = document.createElement("li");
+      li.appendChild(document.createTextNode(strings));
+      ul.appendChild(li);
+    }
+ }
+}
+</script>
+
+
+   </head>
+   <body>
+   <h1>wiki api search </h1>
+<input type="text" id="myText">
+<input type="text" id="myText2">
+  <button href="#"  onclick="sendRequest()">search</button>
+
+  <button onclick="sendRequest2()">post</button>
+   <ul id="result">
+
+   </ul>
+   </body>
+</html>
